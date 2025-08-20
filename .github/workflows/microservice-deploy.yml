@@ -9,16 +9,13 @@ on:
       serviceTwo:
         description: "Service 2"
         type: boolean
-      serviceThree:
-        description: "Service 3"
-        type: boolean
-      environmentService1:
+      environmentServiceOne:
         description: "Service 1 Deployment Environment"
         type: choice
         options:
           - service1_prod
           - service1_dev
-      environmentService2:
+      environmentServiceTwo:
         description: "Service 2 Deployment Environment"
         type: choice
         options:
@@ -30,35 +27,33 @@ jobs:
     runs-on: ubuntu-latest
     name: Unit Tests
     steps:
-      - uses: actions/checkout@v4
-      - run: |
-          echo "Unit Tests"
+      - run: echo "Unit Tests"
         shell: bash
 
   service_one_deployment:
     if: inputs.serviceOne == true
     needs: unit_tests
-    environment: service1_prod
+    environment: inputs.environmentServiceOne
     runs-on: ubuntu-latest
     name: Service 1
     steps:
       - run: |
-          echo "Service 1"
+          if [[ "${{ inputs.environmentServiceOne }}" == "service1_prod" ]]; then
+            MSG="Going to prod!"
+          elif [[ "${{ inputs.environmentServiceOne }}" == "service1_dev" ]]; then
+            MSG="Going to dev!"
+          else
+            MSG="Unknown environment!"
+          fi
+          echo "$MSG"
         shell: bash
 
   service_two_deployment:
+    if: inputs.serviceTwo == true
     needs: unit_tests
-    environment: service2_prod
+    environment: inputs.environmentServiceTwo
     runs-on: ubuntu-latest
     name: Service 2
     steps:
       - run: echo "Service 2"
-        shell: bash
-
-  service_three_deployment:
-    needs: unit_tests
-    runs-on: ubuntu-latest
-    name: Service 3
-    steps:
-      - run: echo "Service 3"
-        shell: bash   
+        shell: bash 
