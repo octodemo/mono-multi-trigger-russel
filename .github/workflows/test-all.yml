@@ -1,0 +1,74 @@
+name: Run All Tests
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Run all tests
+      run: npm test
+      
+    - name: Test individual services
+      run: |
+        echo "Testing Service A - User Management"
+        npm run test:service-a
+        echo "Testing Service B - Product Catalog"
+        npm run test:service-b
+        echo "Testing Service C - Order Management"
+        npm run test:service-c
+        echo "Testing Service D - Payment Service"
+        npm run test:service-d
+        echo "Testing Service E - Notification Service"
+        npm run test:service-e
+
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      service-a: ${{ steps.changes.outputs.service-a }}
+      service-b: ${{ steps.changes.outputs.service-b }}
+      service-c: ${{ steps.changes.outputs.service-c }}
+      service-d: ${{ steps.changes.outputs.service-d }}
+      service-e: ${{ steps.changes.outputs.service-e }}
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        
+    - name: Check for service changes
+      uses: dorny/paths-filter@v2
+      id: changes
+      with:
+        filters: |
+          service-a:
+            - 'services/service-a/**'
+          service-b:
+            - 'services/service-b/**'
+          service-c:
+            - 'services/service-c/**'
+          service-d:
+            - 'services/service-d/**'
+          service-e:
+            - 'services/service-e/**'

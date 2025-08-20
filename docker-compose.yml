@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  service-a:
+    build: ./services/service-a
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=development
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  service-b:
+    build: ./services/service-b
+    ports:
+      - "3002:3002"
+    environment:
+      - NODE_ENV=development
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3002/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  service-c:
+    build: ./services/service-c
+    ports:
+      - "3003:3003"
+    environment:
+      - NODE_ENV=development
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3003/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  service-d:
+    build: ./services/service-d
+    ports:
+      - "3004:3004"
+    environment:
+      - NODE_ENV=development
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3004/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  service-e:
+    build: ./services/service-e
+    ports:
+      - "3005:3005"
+    environment:
+      - NODE_ENV=development
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3005/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  default:
+    name: mono-microservices
