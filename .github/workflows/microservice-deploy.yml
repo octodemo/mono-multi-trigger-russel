@@ -1,0 +1,64 @@
+name: Microservice Deployment Logic
+
+on:
+  workflow_dispatch:
+    inputs:
+      serviceOne:
+        description: "Service 1"
+        type: boolean
+      serviceTwo:
+        description: "Service 2"
+        type: boolean
+      serviceThree:
+        description: "Service 3"
+        type: boolean
+      environmentService1:
+        description: "Service 1 Deployment Environment"
+        type: choice
+        options:
+          - service1_prod
+          - service1_dev
+      environmentService2:
+        description: "Service 2 Deployment Environment"
+        type: choice
+        options:
+          - service2_prod
+          - service2_dev
+
+jobs:
+  unit_tests:
+    runs-on: ubuntu-latest
+    name: Unit Tests
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          echo "Unit Tests"
+        shell: bash
+
+  service_one_deployment:
+    if: inputs.serviceOne == true
+    needs: unit_tests
+    environment: service1_prod
+    runs-on: ubuntu-latest
+    name: Service 1
+    steps:
+      - run: |
+          echo "Service 1"
+        shell: bash
+
+  service_two_deployment:
+    needs: unit_tests
+    environment: service2_prod
+    runs-on: ubuntu-latest
+    name: Service 2
+    steps:
+      - run: echo "Service 2"
+        shell: bash
+
+  service_three_deployment:
+    needs: unit_tests
+    runs-on: ubuntu-latest
+    name: Service 3
+    steps:
+      - run: echo "Service 3"
+        shell: bash   
