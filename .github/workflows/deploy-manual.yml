@@ -3,11 +3,31 @@ name: Manual Deployment
 on:
   workflow_dispatch:
     inputs:
-      services:
-        description: 'Services to deploy (comma-separated)'
-        required: true
-        default: 'service-a,service-b,service-c,service-d,service-e'
-        type: string
+      service-a:
+        description: 'Deploy service-a'
+        required: false
+        default: false
+        type: boolean
+      service-b:
+        description: 'Deploy service-b'
+        required: false
+        default: false
+        type: boolean
+      service-c:
+        description: 'Deploy service-c'
+        required: false
+        default: false
+        type: boolean
+      service-d:
+        description: 'Deploy service-d'
+        required: false
+        default: false
+        type: boolean
+      service-e:
+        description: 'Deploy service-e'
+        required: false
+        default: false
+        type: boolean
       environment:
         description: 'Target environment'
         required: true
@@ -46,46 +66,43 @@ jobs:
     - name: Parse and validate services
       id: parse
       run: |
-        # Define valid services
-        VALID_SERVICES="service-a service-b service-c service-d service-e"
+        # Define valid services and collect selected services
+        VALID_SERVICES=("service-a" "service-b" "service-c" "service-d" "service-e")
+        SELECTED_SERVICES=()
         
-        # Parse input services
-        IFS=',' read -ra SERVICES <<< "${{ github.event.inputs.services }}"
+        # Check which services were selected via checkbox
+        if [[ "${{ github.event.inputs.service-a }}" == "true" ]]; then
+          SELECTED_SERVICES+=("service-a")
+        fi
+        if [[ "${{ github.event.inputs.service-b }}" == "true" ]]; then
+          SELECTED_SERVICES+=("service-b")
+        fi
+        if [[ "${{ github.event.inputs.service-c }}" == "true" ]]; then
+          SELECTED_SERVICES+=("service-c")
+        fi
+        if [[ "${{ github.event.inputs.service-d }}" == "true" ]]; then
+          SELECTED_SERVICES+=("service-d")
+        fi
+        if [[ "${{ github.event.inputs.service-e }}" == "true" ]]; then
+          SELECTED_SERVICES+=("service-e")
+        fi
         
-        # Trim whitespace and validate
-        VALID_SELECTED=""
-        INVALID_SERVICES=""
-        
-        for service in "${SERVICES[@]}"; do
-          service=$(echo "$service" | xargs | sed 's/^"//;s/"$//')  # trim whitespace and remove quotes
-          if [[ " $VALID_SERVICES " =~ " $service " ]]; then
-            if [ -z "$VALID_SELECTED" ]; then
-              VALID_SELECTED="$service"
-            else
-              VALID_SELECTED="$VALID_SELECTED,$service"
-            fi
-          else
-            if [ -z "$INVALID_SERVICES" ]; then
-              INVALID_SERVICES="$service"
-            else
-              INVALID_SERVICES="$INVALID_SERVICES,$service"
-            fi
-          fi
-        done
-        
-        if [ -n "$INVALID_SERVICES" ]; then
-          echo "❌ Invalid services specified: $INVALID_SERVICES"
-          echo "Valid services are: $VALID_SERVICES"
+        # Check if any services were selected
+        if [ ${#SELECTED_SERVICES[@]} -eq 0 ]; then
+          echo "❌ No services selected for deployment"
           exit 1
         fi
         
+        # Create comma-separated list of services for display
+        VALID_SELECTED=$(IFS=,; echo "${SELECTED_SERVICES[*]}")
+        
         # Create matrix for parallel deployment
-        MATRIX_JSON=$(echo "$VALID_SELECTED" | tr ',' '\n' | jq -R . | jq -s -c .)
+        MATRIX_JSON=$(printf '%s\n' "${SELECTED_SERVICES[@]}" | jq -R . | jq -s -c .)
         
         echo "services-matrix=$MATRIX_JSON" >> $GITHUB_OUTPUT
         echo "valid-services=$VALID_SELECTED" >> $GITHUB_OUTPUT
         
-        echo "✅ Valid services to deploy: $VALID_SELECTED"
+        echo "✅ Selected services to deploy: $VALID_SELECTED"
         echo "📍 Target environment: ${{ github.event.inputs.environment }}"
         echo "🏷️ Version: ${{ github.event.inputs.version }}"
         echo "🧪 Dry run: ${{ github.event.inputs.dry_run }}"
