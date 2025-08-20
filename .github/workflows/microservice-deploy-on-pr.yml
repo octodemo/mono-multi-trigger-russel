@@ -1,5 +1,5 @@
 
-name: Microservice Deployment Logic - On Merge
+name: Microservice Deployment Logic - On Pull Request
 
 on:
  pull_request:
@@ -13,8 +13,9 @@ jobs:
         shell: bash
 
   service_one_deployment:
+    if: github.base_ref == 'dev' || github.base_ref == 'main'
     needs: unit_tests
-    environment: service1_prod
+    environment: ${{ github.base_ref == 'dev' && 'service1_dev' || github.base_ref == 'main' && 'service1_prod' || '' }}
     runs-on: ubuntu-latest
     name: Service 1 Deployment
     steps:
@@ -22,8 +23,9 @@ jobs:
         shell: bash
 
   service_two_deployment:
+    if: github.base_ref == 'dev' || github.base_ref == 'main'
     needs: unit_tests
-    environment: service2_prod
+    environment: ${{ github.base_ref == 'dev' && 'service2_dev' || github.base_ref == 'main' && 'service2_prod' || '' }}
     runs-on: ubuntu-latest
     name: Service 2 Deployment
     steps:
