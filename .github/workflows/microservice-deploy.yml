@@ -33,7 +33,7 @@ jobs:
   service_one_deployment:
     if: inputs.serviceOne == true
     needs: unit_tests
-    environment: inputs.environmentServiceOne
+    environment: ${{ inputs.environmentServiceOne }}
     runs-on: ubuntu-latest
     name: Service 1
     steps:
@@ -51,7 +51,7 @@ jobs:
   service_two_deployment:
     if: inputs.serviceTwo == true
     needs: unit_tests
-    environment: inputs.environmentServiceTwo
+    environment: ${{ inputs.environmentServiceTwo }}
     runs-on: ubuntu-latest
     name: Service 2
     steps:
