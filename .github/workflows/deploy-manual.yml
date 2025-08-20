@@ -57,7 +57,7 @@ jobs:
         INVALID_SERVICES=""
         
         for service in "${SERVICES[@]}"; do
-          service=$(echo "$service" | xargs)  # trim whitespace
+          service=$(echo "$service" | xargs | sed 's/^"//;s/"$//')  # trim whitespace and remove quotes
           if [[ " $VALID_SERVICES " =~ " $service " ]]; then
             if [ -z "$VALID_SELECTED" ]; then
               VALID_SELECTED="$service"
@@ -80,7 +80,7 @@ jobs:
         fi
         
         # Create matrix for parallel deployment
-        MATRIX_JSON=$(echo "$VALID_SELECTED" | tr ',' '\n' | jq -R . | jq -s .)
+        MATRIX_JSON=$(echo "$VALID_SELECTED" | tr ',' '\n' | jq -R . | jq -s -c .)
         
         echo "services-matrix=$MATRIX_JSON" >> $GITHUB_OUTPUT
         echo "valid-services=$VALID_SELECTED" >> $GITHUB_OUTPUT
