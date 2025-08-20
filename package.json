@@ -1,0 +1,28 @@
+{
+  "name": "mono-multi-trigger-demo",
+  "version": "1.0.0",
+  "description": "Demo monorepo with 5 microservices and GitHub Actions workflows",
+  "private": true,
+  "workspaces": [
+    "services/*"
+  ],
+  "scripts": {
+    "test": "npm run test --workspaces",
+    "test:service-a": "npm run test --workspace=services/service-a",
+    "test:service-b": "npm run test --workspace=services/service-b", 
+    "test:service-c": "npm run test --workspace=services/service-c",
+    "test:service-d": "npm run test --workspace=services/service-d",
+    "test:service-e": "npm run test --workspace=services/service-e",
+    "start:service-a": "npm run start --workspace=services/service-a",
+    "start:service-b": "npm run start --workspace=services/service-b",
+    "start:service-c": "npm run start --workspace=services/service-c", 
+    "start:service-d": "npm run start --workspace=services/service-d",
+    "start:service-e": "npm run start --workspace=services/service-e"
+  },
+  "devDependencies": {
+    "jest": "^29.0.0"
+  },
+  "keywords": ["monorepo", "microservices", "github-actions", "demo"],
+  "author": "Demo",
+  "license": "MIT"
+}
