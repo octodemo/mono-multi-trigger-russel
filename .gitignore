@@ -17,9 +17,28 @@ coverage/
 # nyc test coverage
 .nyc_output
 
+
 # Logs
 logs
 *.log
+
+# Grunt intermediate storage (https://gruntjs.com/creating-plugins#storing-task-files)
+.grunt
+
+# Bower dependency directory (https://bower.io/)
+bower_components
+
+# node-waf configuration
+.lock-wscript
+
+# Compiled binary addons (https://nodejs.org/api/addons.html)
+build/Release
+
+# Dependency directories
+jspm_packages/
+
+# TypeScript v1 declaration files
+typings/
 
 # Optional npm cache directory
 .npm
@@ -27,11 +46,13 @@ logs
 # Optional eslint cache
 .eslintcache
 
+
 # Microbundle cache
 .rpt2_cache/
 .rts2_cache_cjs/
 .rts2_cache_es/
 .rts2_cache_umd/
+
 
 # Optional REPL history
 .node_repl_history
@@ -45,12 +66,15 @@ logs
 # dotenv environment variables file
 .env
 .env.test
+
 .env.local
 .env.production
+
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
 .parcel-cache
+
 
 # Next.js build output
 .next
@@ -106,6 +130,16 @@ typings/
 # Serverless directories
 .serverless/
 
+# next.js build output
+.next
+
+# vuepress build output
+.vuepress/dist
+
+# Serverless directories
+.serverless
+
+
 # FuseBox cache
 .fusebox/
 
@@ -119,6 +153,9 @@ typings/
 .vscode-test
 
 # IDE files
+
+# IDE and Editor files
+
 .vscode/
 .idea/
 *.swp
@@ -132,4 +169,19 @@ typings/
 .Spotlight-V100
 .Trashes
 ehthumbs.db
+
 Thumbs.db
+
+
+# Logs
+logs
+*.log
+
+# Build output
+dist/
+build/
+
+# Temporary files
+tmp/
+temp/
+
